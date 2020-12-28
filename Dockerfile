@@ -6,3 +6,7 @@ FROM lukechilds/dockerpi:vm
 ARG FILESYSTEM_IMAGE_URL="https://github.com/carlosperate/rpi-os-custom-image/releases/download/v2020-08-24/2020-08-20-raspios-buster-armhf-lite-autologin.img.zip"
 
 ADD $FILESYSTEM_IMAGE_URL /filesystem.zip
+
+# entrypoint.sh has been added in the parent lukechilds/dockerpi:vm
+# Included here to ensure CI services like GH Actions
+ENTRYPOINT ["/entrypoint.sh"]
