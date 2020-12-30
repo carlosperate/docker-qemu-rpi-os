@@ -29,11 +29,37 @@ jobs:
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}
 
-  build-projects:
-    name: Run sample commands in master tag image
+  check-autologin:
+    name: Run bash sample commands in master tag image
     needs: deploy
     runs-on: ubuntu-latest
-    container: ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master
+      options: "--entrypoint /entrypoint.sh"
     steps:
       - run: uname -a
-      - run: cat /etc/os-release
+
+  check-ssh:
+    name: Run SSH sample commands in master tag image
+    needs: deploy
+    runs-on: ubuntu-latest
+    services:
+      rpios:
+        image: ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master
+        ports:
+          - 5022:5022
+    steps:
+      - name: Give 2m for the docker image to start up QEMU and Raspberry Pi OS
+        run: sleep 120
+      - name: executing remote ssh commands 2
+        uses: appleboy/ssh-action@master
+        with:
+          host: rpios
+          username: pi
+          password: raspberry
+          port:  ${{ job.services.rpios.ports[5022] }}
+          # QEMU might still take some extra time to start up Raspberry Pi OS
+          timeout: 5m
+          script: |
+            uname -a
+            cat /etc/os-release
