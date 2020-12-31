@@ -26,9 +26,10 @@ jobs:
         run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}
       - name: Push master tag to ghcr.io
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}
+          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master
 
+  # This check is not valid, will probably delete soon
   check-autologin:
     name: Run bash sample commands in master tag image
     needs: deploy
@@ -51,7 +52,7 @@ jobs:
     steps:
       - name: Give 2m for the docker image to start up QEMU and Raspberry Pi OS
         run: sleep 120
-      - name: executing remote ssh commands 2
+      - name: Executing remote ssh command 1
         uses: appleboy/ssh-action@master
         with:
           host: rpios
@@ -63,3 +64,15 @@ jobs:
           script: |
             uname -a
             cat /etc/os-release
+            touch my_file.txt
+      - name: Executing remote ssh command 2
+        uses: appleboy/ssh-action@master
+        with:
+          host: rpios
+          username: pi
+          password: raspberry
+          port:  ${{ job.services.rpios.ports[5022] }}
+          script: |
+            uname -a
+            cat /etc/os-release
+            ls

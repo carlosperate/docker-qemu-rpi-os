@@ -3,6 +3,9 @@
 # It's just the VM image with a compressed Raspbian filesystem added
 FROM lukechilds/dockerpi:vm
 
+LABEL maintainer="Carlos Pereira Atencio <carlosperate@embeddedlog.com>"
+
+# Image created in https://github.com/carlosperate/rpi-os-custom-image/
 ARG FILESYSTEM_IMAGE_URL="https://github.com/carlosperate/rpi-os-custom-image/releases/download/2020-08-24/raspberry-pi-os-lite-2020-08-24-autologin-ssh.zip"
 
 ADD $FILESYSTEM_IMAGE_URL /filesystem.zip
