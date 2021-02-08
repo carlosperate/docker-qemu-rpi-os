@@ -46,7 +46,12 @@ docker run -it ghcr.io/carlosperate/qemu-rpi-os-lite:buster-latest
 
 ## Other images
 
-Older versions of Raspbian
+Older versions of Raspbian/Raspberry Pi OS:
+
+```
+docker run -it ghcr.io/carlosperate/qemu-rpi-os-lite:jessie-latest
+```
+
 ```
 docker run -it ghcr.io/carlosperate/qemu-rpi-os-lite:stretch-latest
 ```
