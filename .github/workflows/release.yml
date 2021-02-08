@@ -5,8 +5,8 @@ on:
     types: [published]
 
 jobs:
-  deploy-base:
-    name: Deploy base image
+  deploy-release:
+    name: Deploy versioned image
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
