@@ -50,8 +50,8 @@ jobs:
         ports:
           - 5022:5022
     steps:
-      - name: Give 3m for the docker image to start up QEMU and Raspberry Pi OS
-        run: sleep 180
+      - name: Give 2m30s for the docker image to start up QEMU and Raspberry Pi OS
+        run: sleep 150
       - name: Executing remote ssh command 1
         uses: appleboy/ssh-action@master
         with:

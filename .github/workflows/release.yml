@@ -21,10 +21,10 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
       - name: Build image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:jessie-latest .
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:stretch-latest .
       - name: Tag same image with the versioned tag
-        run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:jessie-latest ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}
+        run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:stretch-latest ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}
       - name: Push images to ghcr.io
         run: |
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}
-          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:jessie-latest
+          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:stretch-latest
