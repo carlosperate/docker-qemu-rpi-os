@@ -26,16 +26,10 @@ jobs:
         run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}
       - name: Build Expanded image
         run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-expanded --build-arg FILE_SUFFIX=autologin-ssh-expanded .
-      - name: Tag same expanded image with date
-        run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-expanded ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}-expanded
       - name: Build Mu image
         run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-mu --build-arg FILE_SUFFIX=mu .
-      - name: Tag same Mu image with date
-        run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-mu ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}-mu
-      - name: Push master tag to ghcr.io
+      - name: Push all tags to ghcr.io
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}-mu
-          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}-expanded
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-mu
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-expanded
@@ -43,7 +37,7 @@ jobs:
 
   # This check is not valid, will probably delete soon
   check-autologin:
-    name: Run bash sample commands in master tag image
+    name: Attempt to run bash sample commands in master tag image
     needs: deploy
     runs-on: ubuntu-latest
     container:
@@ -77,7 +71,8 @@ jobs:
             uname -a
             cat /etc/os-release
             touch my_file.txt
-      - name: Executing remote ssh command 2
+            df -h
+      - name: Executing remote ssh command 2 (check state permanence)
         uses: appleboy/ssh-action@master
         with:
           host: rpios
@@ -88,9 +83,10 @@ jobs:
             uname -a
             cat /etc/os-release
             ls
+            test -f my_file.txt && echo "Previously created file exists."
 
   check-ssh-expanded:
-    name: Run SSH sample commands in master tag image
+    name: Run SSH sample commands in master-expanded tag image
     needs: deploy
     runs-on: ubuntu-latest
     services:
@@ -114,7 +110,8 @@ jobs:
             uname -a
             cat /etc/os-release
             touch my_file.txt
-      - name: Executing remote ssh command 2
+            df -h
+      - name: Executing remote ssh command 2 (check state permanence)
         uses: appleboy/ssh-action@master
         with:
           host: rpios
@@ -125,9 +122,10 @@ jobs:
             uname -a
             cat /etc/os-release
             ls
+            test -f my_file.txt && echo "Previously created file exists."
 
   check-ssh-mu:
-    name: Run SSH sample commands in master tag image
+    name: Run SSH sample commands in master-mu tag image
     needs: deploy
     runs-on: ubuntu-latest
     services:
@@ -151,7 +149,8 @@ jobs:
             uname -a
             cat /etc/os-release
             touch my_file.txt
-      - name: Executing remote ssh command 2
+            df -h
+      - name: Executing remote ssh command 2 (check state permanence)
         uses: appleboy/ssh-action@master
         with:
           host: rpios
@@ -162,3 +161,13 @@ jobs:
             uname -a
             cat /etc/os-release
             ls
+            test -f my_file.txt && echo "Previously created file exists."
+      - name: Check the Mu packages are present
+        uses: appleboy/ssh-action@master
+        with:
+          host: rpios
+          username: pi
+          password: raspberry
+          port:  ${{ job.services.rpios.ports[5022] }}
+          script: |
+            dpkg -s python3-pyqt5 python3-pyqt5.qsci python3-pyqt5.qtserialport python3-pyqt5.qtsvg
