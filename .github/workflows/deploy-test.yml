@@ -20,13 +20,25 @@ jobs:
       - name: Current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-      - name: Build image
+      - name: Build base image
         run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master .
-      - name: Tag same image with date
+      - name: Tag same base image with date
         run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}
+      - name: Build Expanded image
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-expanded --build-arg FILE_SUFFIX=autologin-ssh-expanded .
+      - name: Tag same expanded image with date
+        run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-expanded ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}-expanded
+      - name: Build Mu image
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-mu --build-arg FILE_SUFFIX=mu .
+      - name: Tag same Mu image with date
+        run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-mu ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}-mu
       - name: Push master tag to ghcr.io
         run: |
+          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}-mu
+          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}-expanded
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.date.outputs.date }}
+          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-mu
+          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-expanded
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master
 
   # This check is not valid, will probably delete soon
@@ -47,6 +59,80 @@ jobs:
     services:
       rpios:
         image: ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master
+        ports:
+          - 5022:5022
+    steps:
+      - name: Give 2m30s for the docker image to start up QEMU and Raspberry Pi OS
+        run: sleep 150
+      - name: Executing remote ssh command 1
+        uses: appleboy/ssh-action@master
+        with:
+          host: rpios
+          username: pi
+          password: raspberry
+          port:  ${{ job.services.rpios.ports[5022] }}
+          # QEMU might still take some extra time to start up Raspberry Pi OS
+          timeout: 5m
+          script: |
+            uname -a
+            cat /etc/os-release
+            touch my_file.txt
+      - name: Executing remote ssh command 2
+        uses: appleboy/ssh-action@master
+        with:
+          host: rpios
+          username: pi
+          password: raspberry
+          port:  ${{ job.services.rpios.ports[5022] }}
+          script: |
+            uname -a
+            cat /etc/os-release
+            ls
+
+  check-ssh-expanded:
+    name: Run SSH sample commands in master tag image
+    needs: deploy
+    runs-on: ubuntu-latest
+    services:
+      rpios:
+        image: ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-expanded
+        ports:
+          - 5022:5022
+    steps:
+      - name: Give 2m30s for the docker image to start up QEMU and Raspberry Pi OS
+        run: sleep 150
+      - name: Executing remote ssh command 1
+        uses: appleboy/ssh-action@master
+        with:
+          host: rpios
+          username: pi
+          password: raspberry
+          port:  ${{ job.services.rpios.ports[5022] }}
+          # QEMU might still take some extra time to start up Raspberry Pi OS
+          timeout: 5m
+          script: |
+            uname -a
+            cat /etc/os-release
+            touch my_file.txt
+      - name: Executing remote ssh command 2
+        uses: appleboy/ssh-action@master
+        with:
+          host: rpios
+          username: pi
+          password: raspberry
+          port:  ${{ job.services.rpios.ports[5022] }}
+          script: |
+            uname -a
+            cat /etc/os-release
+            ls
+
+  check-ssh-mu:
+    name: Run SSH sample commands in master tag image
+    needs: deploy
+    runs-on: ubuntu-latest
+    services:
+      rpios:
+        image: ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-mu
         ports:
           - 5022:5022
     steps:
