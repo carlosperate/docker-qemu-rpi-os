@@ -1,13 +1,19 @@
 # Based on the last image created the dockerpi Dockerfile
-# https://github.com/lukechilds/dockerpi/blob/35b55bcd34746380e034675048391c98ef85907c/Dockerfile
+# https://github.com/lukechilds/dockerpi/blob/6c1ac8edab988dca8bb36dddc5388e8c4123c824/Dockerfile
 # It's just the VM image with a compressed Raspbian filesystem added
 FROM lukechilds/dockerpi:vm
 
 LABEL maintainer="Carlos Pereira Atencio <carlosperate@embeddedlog.com>"
 
-# Image created in https://github.com/carlosperate/rpi-os-custom-image/
-ARG FILESYSTEM_IMAGE_URL="https://github.com/carlosperate/rpi-os-custom-image/releases/download/2018-03-13/raspberry-pi-os-lite-stretch-2018-03-13-autologin-ssh.zip"
+# Select the GitHub tag and filename from the release that hosts the OS files
+# https://github.com/carlosperate/rpi-os-custom-image/releases/
+# The FILE_SUFFIX can be overwritten with the `docker build --build-arg` flag
+ARG GH_TAG="2018-03-13"
+ARG FILE_PREXIF="raspberry-pi-os-lite-stretch-2018-03-13-"
+ARG FILE_SUFFIX="autologin-ssh"
+ARG FILE_EXTENSION=".zip"
 
+ARG FILESYSTEM_IMAGE_URL="https://github.com/carlosperate/rpi-os-custom-image/releases/download/"${GH_TAG}"/"${FILE_PREXIF}${FILE_SUFFIX}${FILE_EXTENSION}
 ADD $FILESYSTEM_IMAGE_URL /filesystem.zip
 
 # entrypoint.sh has been added in the parent lukechilds/dockerpi:vm
