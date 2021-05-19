@@ -8,8 +8,8 @@ LABEL maintainer="Carlos Pereira Atencio <carlosperate@embeddedlog.com>"
 # Select the GitHub tag and filename from the release that hosts the OS files
 # https://github.com/carlosperate/rpi-os-custom-image/releases/
 # The FILE_SUFFIX can be overwritten with the `docker build --build-arg` flag
-ARG GH_TAG="2018-03-13"
-ARG FILE_PREXIF="raspberry-pi-os-lite-stretch-2018-03-13-"
+ARG GH_TAG="2019-04-09"
+ARG FILE_PREXIF="raspberry-pi-os-lite-stretch-2019-04-09-"
 ARG FILE_SUFFIX="autologin-ssh"
 ARG FILE_EXTENSION=".zip"
 
