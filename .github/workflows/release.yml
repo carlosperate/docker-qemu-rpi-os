@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy-release:
-    name: Deploy versioned image
+    name: Deploy versioned images
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -21,9 +21,9 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
       - name: Build base image with latest tag
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:stretch-latest .
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:buster-latest .
       - name: Tag the base image with the versioned tag
-        run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:stretch-latest ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}
+        run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:buster-latest ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}
       - name: Build Expanded image
         run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}-expanded --build-arg FILE_SUFFIX=autologin-ssh-expanded .
       - name: Build Mu image
@@ -33,4 +33,4 @@ jobs:
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}-mu
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}-expanded
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}
-          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:stretch-latest
+          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:buster-latest
