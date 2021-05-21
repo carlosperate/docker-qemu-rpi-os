@@ -20,23 +20,23 @@ jobs:
       - name: Current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-      - name: Build base image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master .
+      - name: Build base image (with expanded fs, otherwise is too small)
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master --build-arg FILE_SUFFIX=autologin-ssh-expanded .
       - name: Tag same base image with date
         run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-${{ steps.date.outputs.date }}
-      - name: Build Expanded image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-expanded --build-arg FILE_SUFFIX=autologin-ssh-expanded .
+      - name: Build Reduced Disk image (not expanded)
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-reduced-disk --build-arg FILE_SUFFIX=autologin-ssh .
       - name: Build Mu image
         run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-mu --build-arg FILE_SUFFIX=mu .
       - name: Push all tags to ghcr.io
         run: |
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-${{ steps.date.outputs.date }}
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-mu
-          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-expanded
+          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-reduced-disk
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master
 
   # This check is not valid, will probably delete soon
-  check-autologin:
+  check-action-container:
     name: Attempt to bash into container master tag
     needs: deploy
     runs-on: ubuntu-latest
@@ -85,13 +85,13 @@ jobs:
             ls
             test -f my_file.txt && echo "Previously created file exists."
 
-  check-ssh-expanded:
+  check-ssh-reduced:
     name: SSH sample master-expanded tag
     needs: deploy
     runs-on: ubuntu-latest
     services:
       rpios:
-        image: ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-expanded
+        image: ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-reduced-disk
         ports:
           - 5022:5022
     steps:
