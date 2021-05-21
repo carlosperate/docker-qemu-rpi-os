@@ -10,7 +10,7 @@ LABEL maintainer="Carlos Pereira Atencio <carlosperate@embeddedlog.com>"
 # The FILE_SUFFIX can be overwritten with the `docker build --build-arg` flag
 ARG GH_TAG="2020-02-14"
 ARG FILE_PREXIF="raspberry-pi-os-lite-buster-2020-02-14-"
-ARG FILE_SUFFIX="autologin-ssh"
+ARG FILE_SUFFIX="autologin-ssh-expanded"
 ARG FILE_EXTENSION=".zip"
 
 ARG FILESYSTEM_IMAGE_URL="https://github.com/carlosperate/rpi-os-custom-image/releases/download/"${GH_TAG}"/"${FILE_PREXIF}${FILE_SUFFIX}${FILE_EXTENSION}
