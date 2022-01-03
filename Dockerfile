@@ -1,7 +1,12 @@
-# Based on the last image created the dockerpi Dockerfile
+# This Dockerfile is based on the last image from dockerpi
+# It's just the VM image with a different compressed Raspbian fs img file
 # https://github.com/lukechilds/dockerpi/blob/6c1ac8edab988dca8bb36dddc5388e8c4123c824/Dockerfile
-# It's just the VM image with a compressed Raspbian filesystem added
-FROM lukechilds/dockerpi:vm
+
+# The current lukechilds/dockerpi:vm has an issue uncompressing fs images
+# larger than 1 GB, so it has been temporarily forked with the fix
+# More info: https://github.com/lukechilds/dockerpi/pull/48
+# FROM lukechilds/dockerpi:vm
+FROM ghcr.io/carlosperate/dockerpi:vm-fix
 
 LABEL maintainer="Carlos Pereira Atencio <carlosperate@embeddedlog.com>"
 
