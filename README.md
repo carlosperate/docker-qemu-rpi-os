@@ -66,19 +66,24 @@ The main latest image is `buster-latest`:
 ghcr.io/carlosperate/qemu-rpi-os-lite:buster-latest
 ```
 
-There are two additional versions for each release.
-1) `Extended` with an extra 1GB of disk space:
+There are two additional versions for each release (they do not have a `latest`
+tag, so they include the OS release date in the tag name).
+
+1) `reduced-disk` contains a smaller disk size, which might be enough for small
+   jobs. The difference is that the default image expands the disk by an extra
+   1GB of space, to reach a total of about ~1.5 GB of free disk.
     ```
-    ghcr.io/carlosperate/qemu-rpi-os-lite:buster-extended-latest
+    ghcr.io/carlosperate/qemu-rpi-os-lite:buster-yyyy-mm-dd-reduced-disk
     ```
 2) `Mu`, an specialised image with the
-  [Mu Editor](https://github.com/mu-editor/mu) dependencies pre-installed:
+  [Mu Editor](https://github.com/mu-editor/mu) dependencies pre-installed,
+  which is used for CI tests:
     ```
-    ghcr.io/carlosperate/qemu-rpi-os-lite:buster-mu-latest
+    ghcr.io/carlosperate/qemu-rpi-os-lite:buster-yyyy-mm-dd-mu-latest
     ```
 
 All images can be found here:
-https://github.com/users/carlosperate/packages/container/package/qemu-rpi-os-lite
+https://github.com/carlosperate/docker-qemu-rpi-os/pkgs/container/qemu-rpi-os-lite
 
 ### Releases
 
