@@ -12,7 +12,7 @@ LABEL maintainer="Carlos Pereira Atencio <carlosperate@embeddedlog.com>"
 
 # Select the GitHub tag from the release that hosts the OS files
 # https://github.com/carlosperate/rpi-os-custom-image/releases/
-ARG GH_TAG="buster-legacy-2021-12-02"
+ARG GH_TAG="bullseye-2021-11-08"
 
 # To build a different image type from the release the FILE_SUFFIX variable
 # can be overwritten with the `docker build --build-arg` flag
