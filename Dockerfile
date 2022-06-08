@@ -8,7 +8,9 @@
 # FROM lukechilds/dockerpi:vm
 FROM ghcr.io/carlosperate/dockerpi:vm-fix
 
-LABEL maintainer="Carlos Pereira Atencio <carlosperate@embeddedlog.com>"
+LABEL org.opencontainers.image.authors="Carlos Pereira Atencio <carlosperate@embeddedlog.com>"
+LABEL org.opencontainers.image.description="Docker image with Raspberry Pi OS running on QEMU."
+LABEL org.opencontainers.image.source="https://github.com/carlosperate/docker-qemu-rpi-os"
 
 # Select the GitHub tag from the release that hosts the OS files
 # https://github.com/carlosperate/rpi-os-custom-image/releases/
