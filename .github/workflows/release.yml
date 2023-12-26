@@ -21,9 +21,9 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
       - name: Build base image (expanded disk) with latest tag
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:bullseye-latest --build-arg FILE_SUFFIX=autologin-ssh-expanded .
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:buster-legacy-latest --build-arg FILE_SUFFIX=autologin-ssh-expanded .
       - name: Tag the base image with the versioned tag
-        run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:bullseye-latest ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}
+        run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:buster-legacy-latest ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}
       - name: Build Reduced Disk image
         run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}-reduced-disk --build-arg FILE_SUFFIX=autologin-ssh .
       - name: Build Mu image
@@ -33,4 +33,4 @@ jobs:
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}-mu
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}-reduced-disk
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}
-          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:bullseye-latest
+          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:buster-legacy-latest
