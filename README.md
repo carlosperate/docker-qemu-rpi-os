@@ -31,17 +31,17 @@ These Docker images are built on top of the fantastic
 [dockerpi](https://github.com/lukechilds/dockerpi) project, all credit for
 the hard work goes to them. The main difference in this version is that the
 [Raspberry Pi OS Lite image used](https://github.com/carlosperate/rpi-os-custom-image)
-has been updated to enable autologin and ssh.
+has been updated to enable auto-login, SSH, and expand their filesystem size.
 
 These changes make these images useful for things like running automated
-tests on CI, like GitHub Actions.
+tests on CI, like within GitHub Actions.
 
 ## How to use these images
 
 The main image produced in this repository can be run with this command:
 
-```
-docker run -it ghcr.io/carlosperate/qemu-rpi-os-lite:buster-latest
+```bash
+docker run -it ghcr.io/carlosperate/qemu-rpi-os-lite:bullseye-latest
 ```
 
 This will drop you into a bash session inside Raspberry Pi OS.
@@ -50,8 +50,8 @@ This will drop you into a bash session inside Raspberry Pi OS.
 
 You can also launch an image with port forwarding and access it via SSH:
 
-```
-docker run -it -p 5022:5022 ghcr.io/carlosperate/qemu-rpi-os-lite:buster-latest
+```bash
+docker run -it -p 5022:5022 ghcr.io/carlosperate/qemu-rpi-os-lite:bullseye-latest
 ```
 
 - SSH port: `5022`
@@ -60,34 +60,39 @@ docker run -it -p 5022:5022 ghcr.io/carlosperate/qemu-rpi-os-lite:buster-latest
 
 ## Available Images
 
-The main latest image is `buster-latest`:
+There are two main releases right now `buster-legacy-latest` and
+'bullseye-latest':
 
 ```
-ghcr.io/carlosperate/qemu-rpi-os-lite:buster-latest
+ghcr.io/carlosperate/qemu-rpi-os-lite:bullseye-latest
 ```
 
-There are two additional versions for each release (they do not have a `latest`
-tag, so they include the OS release date in the tag name).
+```
+ghcr.io/carlosperate/qemu-rpi-os-lite:buster-legacy-latest
+```
 
-1) `reduced-disk` contains a smaller disk size, which might be enough for small
-   jobs. The difference is that the default image expands the disk by an extra
-   1GB of space, to reach a total of about ~1.5 GB of free disk.
-    ```
-    ghcr.io/carlosperate/qemu-rpi-os-lite:buster-yyyy-mm-dd-reduced-disk
-    ```
-2) `Mu`, an specialised image with the
-  [Mu Editor](https://github.com/mu-editor/mu) dependencies pre-installed,
-  which is used for CI tests:
-    ```
-    ghcr.io/carlosperate/qemu-rpi-os-lite:buster-yyyy-mm-dd-mu-latest
-    ```
+Each Pi OS release has it's own tag, including the OS release date in this
+format:
+
+```
+ghcr.io/carlosperate/qemu-rpi-os-lite:buster-yyyy-mm-dd-mu
+```
+
+There also is an additional tag on each release with the postfix `mu` in the
+tag name, which is an specialised image created specifically to contain the
+[Mu Editor](https://github.com/mu-editor/mu) dependencies pre-installed,
+which is used for CI tests on that project:
+
+```
+ghcr.io/carlosperate/qemu-rpi-os-lite:buster-yyyy-mm-dd-mu
+```
 
 All images can be found here:
 https://github.com/carlosperate/docker-qemu-rpi-os/pkgs/container/qemu-rpi-os-lite
 
 ### Releases
 
-Each OS release is tracked and customised edited via this
+Each OS release is tracked and customised via the
 [Raspberry Pi OS Custom Image](https://github.com/carlosperate/rpi-os-custom-image)
 repository, which then hosts the custom images in its
 [releases page](https://github.com/carlosperate/rpi-os-custom-image/releases).
@@ -96,12 +101,18 @@ repository, which then hosts the custom images in its
 
 Older versions of Raspbian/Raspberry Pi OS have been tagged and published:
 
-```
+```bash
 docker run -it ghcr.io/carlosperate/qemu-rpi-os-lite:jessie-latest
 ```
 
-```
+```bash
 docker run -it ghcr.io/carlosperate/qemu-rpi-os-lite:stretch-latest
+```
+
+Tags for the older "buster" release, before it was renamed to "buster-legacy":
+
+```bash
+docker run -it ghcr.io/carlosperate/qemu-rpi-os-lite:buster-latest
 ```
 
 ## Build and run this docker image from the repository
@@ -114,7 +125,7 @@ git clone https://github.com/carlosperate/docker-qemu-rpi-os.git
 cd docker-qemu-rpi-os
 ```
 
-``` 
+```
 docker build -t carlosperate/qemu-rpi-os-lite .
 ```
 

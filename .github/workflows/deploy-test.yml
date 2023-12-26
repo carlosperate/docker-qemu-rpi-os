@@ -24,15 +24,12 @@ jobs:
         run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master --build-arg FILE_SUFFIX=autologin-ssh-expanded .
       - name: Tag same base image with date
         run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-${{ steps.date.outputs.date }}
-      - name: Build Reduced Disk image (not expanded)
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-reduced-disk --build-arg FILE_SUFFIX=autologin-ssh .
       - name: Build Mu image
         run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-mu --build-arg FILE_SUFFIX=mu .
       - name: Push all tags to ghcr.io
         run: |
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-${{ steps.date.outputs.date }}
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-mu
-          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-reduced-disk
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master
 
   # This check is not valid, will probably delete soon
@@ -53,45 +50,6 @@ jobs:
     services:
       rpios:
         image: ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master
-        ports:
-          - 5022:5022
-    steps:
-      - name: Give 2m30s for the docker image to start up QEMU and Raspberry Pi OS
-        run: sleep 150
-      - name: Executing remote ssh command 1
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: rpios
-          username: pi
-          password: raspberry
-          port:  ${{ job.services.rpios.ports[5022] }}
-          # QEMU might still take some extra time to start up Raspberry Pi OS
-          timeout: 5m
-          script: |
-            uname -a
-            cat /etc/os-release
-            touch my_file.txt
-            df -h
-      - name: Executing remote ssh command 2 (check state permanence)
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: rpios
-          username: pi
-          password: raspberry
-          port:  ${{ job.services.rpios.ports[5022] }}
-          script: |
-            uname -a
-            cat /etc/os-release
-            ls
-            test -f my_file.txt && echo "Previously created file exists."
-
-  check-ssh-reduced:
-    name: SSH sample master-expanded tag
-    needs: deploy
-    runs-on: ubuntu-latest
-    services:
-      rpios:
-        image: ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-reduced-disk
         ports:
           - 5022:5022
     steps:
