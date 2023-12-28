@@ -10,10 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-        shell: bash
+      - name: Set release tag to env variables $TAG
+        run: echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Set 'latest tag' (e.g. buster-legacy-2022-04-19 -> buster-latest) to env variable $TAG_LATEST
+        run: python -c "t='$TAG'.split('-')[0]; print(f'TAG_LATEST={t}-latest')" >> $GITHUB_ENV
+      - run: echo "Release tag is '$TAG' and latest tag is '${{ env.TAG_LATEST }}'"
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -21,13 +22,13 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
       - name: Build base image (expanded disk) with latest tag
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:buster-legacy-latest --build-arg FILE_SUFFIX=autologin-ssh-expanded .
-      - name: Tag the base image with the versioned tag
-        run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:buster-legacy-latest ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ env.TAG_LATEST }} --build-arg FILE_SUFFIX=autologin-ssh-expanded .
+      - name: Then tag it with the full version as well
+        run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ env.TAG_LATEST }} ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ env.TAG }}
       - name: Build Mu image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}-mu --build-arg FILE_SUFFIX=mu .
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ env.TAG }}-mu --build-arg FILE_SUFFIX=mu .
       - name: Push images to ghcr.io
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}-mu
-          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ steps.get_version.outputs.VERSION }}
-          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:buster-legacy-latest
+          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ env.TAG }}-mu
+          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ env.TAG }}
+          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:${{ env.TAG_LATEST }}

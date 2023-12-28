@@ -34,7 +34,7 @@ the hard work goes to them. The main difference in this version is that the
 has been updated to enable auto-login, SSH, and expand their filesystem size.
 
 These changes make these images useful for things like running automated
-tests on CI, like within GitHub Actions.
+tests on CI, e.g. GitHub Actions.
 
 ## How to use these images
 
@@ -61,7 +61,7 @@ docker run -it -p 5022:5022 ghcr.io/carlosperate/qemu-rpi-os-lite:bullseye-lates
 ## Available Images
 
 There are two main releases right now `buster-legacy-latest` and
-'bullseye-latest':
+`bullseye-latest`:
 
 ```
 ghcr.io/carlosperate/qemu-rpi-os-lite:bullseye-latest
@@ -71,15 +71,15 @@ ghcr.io/carlosperate/qemu-rpi-os-lite:bullseye-latest
 ghcr.io/carlosperate/qemu-rpi-os-lite:buster-legacy-latest
 ```
 
-Each Pi OS release has it's own tag, including the OS release date in this
+Each Pi OS release has its own tag, including the OS release date in this
 format:
 
 ```
-ghcr.io/carlosperate/qemu-rpi-os-lite:buster-yyyy-mm-dd-mu
+ghcr.io/carlosperate/qemu-rpi-os-lite:buster-yyyy-mm-dd
 ```
 
 There also is an additional tag on each release with the postfix `mu` in the
-tag name, which is an specialised image created specifically to contain the
+tag name, which is an specialised image created specifically to include the
 [Mu Editor](https://github.com/mu-editor/mu) dependencies pre-installed,
 which is used for CI tests on that project:
 

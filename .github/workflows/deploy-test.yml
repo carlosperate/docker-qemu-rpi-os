@@ -17,18 +17,18 @@ jobs:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.CR_PAT }}
-      - name: Current date
+      - name: Set current date to env variable $DATE_YYYY_MM_DD
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+        run: echo "DATE_YYYY_MM_DD=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
       - name: Build base image (with expanded fs, otherwise is too small)
         run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master --build-arg FILE_SUFFIX=autologin-ssh-expanded .
       - name: Tag same base image with date
-        run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-${{ steps.date.outputs.date }}
+        run: docker tag ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-${{ env.DATE_YYYY_MM_DD }}
       - name: Build Mu image
         run: docker build -t ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-mu --build-arg FILE_SUFFIX=mu .
       - name: Push all tags to ghcr.io
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-${{ steps.date.outputs.date }}
+          docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-${{ env.DATE_YYYY_MM_DD }}
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master-mu
           docker push ghcr.io/${{ github.repository_owner }}/qemu-rpi-os-lite:master
 
