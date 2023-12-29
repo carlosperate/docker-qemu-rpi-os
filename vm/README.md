@@ -1,5 +1,5 @@
 <div align="center">
-	<img width="256" src="media/logo.svg">
+	<img width="256" src="https://raw.githubusercontent.com/lukechilds/dockerpi/5f58e8b5fefde0e5d4aedd19d7c04a2ff77eb4c3/media/logo.svg">
 </div>
 
 # dockerpi Fork
@@ -35,7 +35,7 @@ List of changes:
           https://bugs.launchpad.net/ubuntu/+source/libslirp/+bug/2029431
           https://www.mail-archive.com/qemu-devel@nongnu.org/msg903610.html
     - `entrypoint.sh`: Output of `qemu-img info` now returns multiple `virtual-size` keys and only one needed
-- Added developer documentation for this fork to [dev-docs.md](dev-docs.md)
+- Added developer documentation for this fork to [../dev-docs.md](../dev-docs.md)
 
 The rest of the original README can be seen below.
 
@@ -48,7 +48,7 @@ Gives you access to a virtualised ARM based Raspberry Pi machine running the Ras
 This is not just a Raspian Docker image, it's a full ARM based Raspberry Pi virtual machine environment.
 
 <div align="center">
-	<img src="media/demo.svg" width="720">
+	<img src="https://raw.githubusercontent.com/lukechilds/dockerpi/5f58e8b5fefde0e5d4aedd19d7c04a2ff77eb4c3/media/demo.svg" width="720">
 </div>
 
 ## Usage

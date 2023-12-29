@@ -117,18 +117,4 @@ docker run -it ghcr.io/carlosperate/qemu-rpi-os-lite:buster-latest
 
 ## Build and run this docker image from the repository
 
-```
-git clone https://github.com/carlosperate/docker-qemu-rpi-os.git
-```
-
-```
-cd docker-qemu-rpi-os
-```
-
-```
-docker build -t carlosperate/qemu-rpi-os-lite .
-```
-
-```
-docker run -it carlosperate/qemu-rpi-os-lite
-```
+This information can be found in the [dev_docs.md](dev_docs.md) file.
