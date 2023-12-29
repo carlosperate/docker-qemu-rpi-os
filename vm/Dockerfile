@@ -84,15 +84,3 @@ VOLUME /sdcard
 
 ADD ./entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["./entrypoint.sh"]
-
-
-# Build the dockerpi image
-# It's just the VM image with a compressed Raspbian filesystem added
-FROM dockerpi-vm as dockerpi
-LABEL maintainer="Luke Childs <lukechilds123@gmail.com>"
-ARG FILESYSTEM_IMAGE_URL="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-09-30/2019-09-26-raspbian-buster-lite.zip"
-ARG FILESYSTEM_IMAGE_CHECKSUM="a50237c2f718bd8d806b96df5b9d2174ce8b789eda1f03434ed2213bbca6c6ff"
-
-ADD $FILESYSTEM_IMAGE_URL /filesystem.zip
-
-RUN echo "$FILESYSTEM_IMAGE_CHECKSUM  /filesystem.zip" | sha256sum -c

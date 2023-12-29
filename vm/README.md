@@ -2,13 +2,23 @@
 	<img width="256" src="media/logo.svg">
 </div>
 
-# dockerpi
+# dockerpi Fork
 
-[![Docker Pulls](https://badgen.net/docker/pulls/lukechilds/dockerpi?icon=docker&label=Docker%20pulls)](https://hub.docker.com/r/lukechilds/dockerpi/)
-[![Docker Image Size](https://badgen.net/docker/size/lukechilds/dockerpi/latest/amd64?icon=docker&label=lukechilds/dockerpi)](https://hub.docker.com/r/lukechilds/dockerpi/tags)
-[![GitHub Donate](https://badgen.net/badge/GitHub/Sponsor/D959A7?icon=github)](https://github.com/sponsors/lukechilds)
-[![Bitcoin Donate](https://badgen.net/badge/Bitcoin/Donate/F19537?icon=bitcoin)](https://lu.ke/tip/bitcoin)
-[![Lightning Donate](https://badgen.net/badge/Lightning/Donate/F6BC41?icon=bitcoin-lightning)](https://lu.ke/tip/lightning)
+This is a fork of the original
+[dockerpi](https://github.com/lukechilds/dockerpi/) project, to be able to 
+apply fixes and improvements, since the original upstream project hasn't been
+updated in two and a half years.
+
+List of changes:
+- Removed the `dockerpi` image and only kept the `vm`
+    - As only the `vm` image is used by the docker-qemu-rpi-os project in
+      the main [../Dockerfile](../Dockerfile)
+    - commit xxxxx
+- Added developer documentation for this fork to [dev-docs.md](dev-docs.md)
+
+The rest of the original README can be seen below.
+
+----------
 
 > A Virtualised Raspberry Pi inside a Docker image
 
