@@ -17,6 +17,10 @@ List of changes:
 - Fix build issue `xz: Cannot exec: No such file or directory`
     - Reported upstream: https://github.com/lukechilds/dockerpi/issues/56
     - Fix from upstream PR: https://github.com/lukechilds/dockerpi/pull/59
+    - commit 46deb95ca5df09be1aec482e45f304025cba802e
+- Fix build issue `Package python is not available, but is referred to by another package.`
+    - Reported upstream: https://github.com/lukechilds/dockerpi/issues/60
+    - Fix from upstream PR: https://github.com/lukechilds/dockerpi/pull/61
     - commit xxxxx
 - Added developer documentation for this fork to [dev-docs.md](dev-docs.md)
 
