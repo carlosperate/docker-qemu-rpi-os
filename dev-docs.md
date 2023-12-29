@@ -54,3 +54,22 @@ docker tag IMAGE_ID ghcr.io/carlosperate/dockerpi-vm:VERSION
 ```bash
 docker push ghcr.io/carlosperate/dockerpi-vm:VERSION
 ```
+
+### `launch_vm.py` script
+
+This is a very simple script that launches the dockerpi vm fork image
+pointing to a .img file, runs a couple of commands, and closes it.
+
+It can be used to time how long it takes and compare different vm
+configurations.
+
+Dependencies:
+- Docker
+- Python 3
+- `pip install pexpect`
+
+To run the script:
+
+```
+python launch_vm.py path_to_my.img
+```
