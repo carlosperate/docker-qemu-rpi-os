@@ -15,12 +15,13 @@ List of changes:
       the main [../Dockerfile](../Dockerfile)
     - commit b91b284ff848a7c265230ba5630bd7578074eec2
 - Fix build issue `xz: Cannot exec: No such file or directory`
-    - Reported upstream: https://github.com/lukechilds/dockerpi/issues/56
     - Fix from upstream PR: https://github.com/lukechilds/dockerpi/pull/59
     - commit 46deb95ca5df09be1aec482e45f304025cba802e
 - Fix build issue `Package python is not available, but is referred to by another package.`
-    - Reported upstream: https://github.com/lukechilds/dockerpi/issues/60
     - Fix from upstream PR: https://github.com/lukechilds/dockerpi/pull/61
+    - commit 0cca83af5c67a90b2ba646098496105e890346fe
+- Fix run issue uncompressing OS image zip files larger than 4GB `unzip: bad length`
+    - Fix from upstream PR: https://github.com/lukechilds/dockerpi/pull/48
     - commit xxxxx
 - Added developer documentation for this fork to [dev-docs.md](dev-docs.md)
 
