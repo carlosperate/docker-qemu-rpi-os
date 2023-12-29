@@ -13,6 +13,10 @@ List of changes:
 - Removed the `dockerpi` image and only kept the `vm`
     - As only the `vm` image is used by the docker-qemu-rpi-os project in
       the main [../Dockerfile](../Dockerfile)
+    - commit b91b284ff848a7c265230ba5630bd7578074eec2
+- Fix build issue `xz: Cannot exec: No such file or directory`
+    - Reported upstream: https://github.com/lukechilds/dockerpi/issues/56
+    - Fix from upstream PR: https://github.com/lukechilds/dockerpi/pull/59
     - commit xxxxx
 - Added developer documentation for this fork to [dev-docs.md](dev-docs.md)
 
