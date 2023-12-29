@@ -11,8 +11,7 @@ updated in two and a half years.
 
 List of changes:
 - Removed the `dockerpi` image and only kept the `vm`
-    - As only the `vm` image is used by the docker-qemu-rpi-os project in
-      the main [../Dockerfile](../Dockerfile)
+    - As only the `vm` image is used by the docker-qemu-rpi-os project in the main [../Dockerfile](../Dockerfile)
     - commit b91b284ff848a7c265230ba5630bd7578074eec2
 - Fix build issue `xz: Cannot exec: No such file or directory`
     - Fix from upstream PR: https://github.com/lukechilds/dockerpi/pull/59
@@ -22,7 +21,20 @@ List of changes:
     - commit 0cca83af5c67a90b2ba646098496105e890346fe
 - Fix run issue uncompressing OS image zip files larger than 4GB `unzip: bad length`
     - Fix from upstream PR: https://github.com/lukechilds/dockerpi/pull/48
+    - commit 1d6745db79c300ce6445d049760a2e01f4ee43d0
+- Updated Qemu to 8.2.0
     - commit xxxxx
+    - Fixes issue where Qemu for pi2/3 hangs on power down (before the container had to be manually killed)
+    - Extra configure flags:
+        - `--disable-gio`: https://gitlab.com/qemu-project/qemu/-/issues/1190
+        - `--disable-docs`: To avoid needing the `sphinx` python dependencies
+        - `--enable-slirp`: To resolve `network backend 'user' is not compiled into this binary`
+          Since v7.2+ Qemu does not include the `slirp` networking lib
+          Due to an issue in debian's `libslirp-dev` package, need to move image to Ubuntu 23.10
+          https://stackoverflow.com/questions/75641274/network-backend-user-is-not-compiled-into-this-binary
+          https://bugs.launchpad.net/ubuntu/+source/libslirp/+bug/2029431
+          https://www.mail-archive.com/qemu-devel@nongnu.org/msg903610.html
+    - `entrypoint.sh`: Output of `qemu-img info` now returns multiple `virtual-size` keys and only one needed
 - Added developer documentation for this fork to [dev-docs.md](dev-docs.md)
 
 The rest of the original README can be seen below.

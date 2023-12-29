@@ -18,7 +18,7 @@ if [ ! -e $image_path ]; then
 fi
 
 qemu-img info $image_path
-image_size_in_bytes=$(qemu-img info --output json $image_path | grep "virtual-size" | awk '{print $2}' | sed 's/,//')
+image_size_in_bytes=$(qemu-img info --output json $image_path | grep "virtual-size" | awk '{print $2}' | sed 's/,//' | tail -n1)
 if [[ "$(($image_size_in_bytes % ($GIB_IN_BYTES * 2)))" != "0" ]]; then
   new_size_in_gib=$((($image_size_in_bytes / ($GIB_IN_BYTES * 2) + 1) * 2))
   echo "Rounding image size up to ${new_size_in_gib}GiB so it's a multiple of 2GiB..."
