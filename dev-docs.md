@@ -55,13 +55,13 @@ docker tag IMAGE_ID ghcr.io/carlosperate/dockerpi-vm:VERSION
 docker push ghcr.io/carlosperate/dockerpi-vm:VERSION
 ```
 
-### `launch_vm.py` script
+### `benchmark_vm.py` script
 
 This is a very simple script that launches the dockerpi vm fork image
-pointing to a .img file, runs a couple of commands, and closes it.
+pointing to a .img file (with autologin enabled), runs a couple of benchmarks,
+and closes it.
 
-It can be used to time how long it takes and compare different vm
-configurations.
+It can be used to compare performance of different vm configurations.
 
 Dependencies:
 - Docker
@@ -70,6 +70,9 @@ Dependencies:
 
 To run the script:
 
+```bash
+python benchmark_vm.py path_to_my.img -p=pi1
 ```
-python launch_vm.py -i path_to_my.img -p=pi1
+```bash
+python benchmark_vm.py path_to_my.img -p=pi1 -d=ghcr.io/carlosperate/dockerpi-vm:local
 ```

@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Launch a Raspberry PI OS image with Docker and QEMU, run a few commands,
-and close it.
-
-This can be used as a simple test to time startup and tear down speed
-of different Raspberry Pi emulation configurations.
+Launch a Raspberry PI OS image with Docker and QEMU, run a couple of
+benchmarks, and close it.
 
 This script requires a Pi OS image with autologin enabled.
 """
@@ -77,7 +74,7 @@ def close_container(child, docker_container_name):
             )
             print("{}\n! Exit status: {}".format(cmd_op, exit_status))
         else:
-            print('! Docker container was already stopped.')
+            print('! Docker container was already stopped ✅')
 
 
 def run(docker_img, img_path, pi_version):
@@ -87,17 +84,37 @@ def run(docker_img, img_path, pi_version):
     try:
         child, docker_container_name = launch_docker_spawn(docker_img, img_path, pi_version)
         child.expect_exact(BASH_PROMPT)
+
+        # System info
         child.sendline("uname -a")
         child.expect_exact(BASH_PROMPT)
         child.sendline("cat /etc/os-release | head -n 1")
         child.expect_exact(BASH_PROMPT)
         child.sendline("cat /proc/cpuinfo")
         child.expect_exact(BASH_PROMPT)
-        # child.sendline("sudo apt install -y speedtest-cli")
-        # child.expect_exact(BASH_PROMPT)
-        # child.sendline("speedtest-cli --secure")
-        # child.expect_exact(BASH_PROMPT)
-        child.sendline('python -c "import platform as p; print(p.machine(), p.architecture())"')
+
+        # Benchmarks
+        child.sendline("sudo apt update -qq")
+        child.expect_exact(BASH_PROMPT)
+        child.sendline("sudo apt install -y speedtest-cli sysbench")
+        child.expect_exact(BASH_PROMPT)
+        child.sendline("speedtest-cli --secure")
+        child.expect_exact(BASH_PROMPT)
+        child.sendline("# CPU test - 1 thread")
+        child.expect_exact(BASH_PROMPT)
+        child.sendline("sysbench --num-threads=1 --validate=on --test=cpu --cpu-max-prime=1000 run")
+        child.expect_exact(BASH_PROMPT)
+        child.sendline("# CPU test - 4 thread")
+        child.expect_exact(BASH_PROMPT)
+        child.sendline("sysbench --num-threads=4 --validate=on --test=cpu --cpu-max-prime=1000 run")
+        child.expect_exact(BASH_PROMPT)
+        child.sendline("# Disk test - Write")
+        child.expect_exact(BASH_PROMPT)
+        child.sendline("rm -f ~/test.tmp && sync && dd if=/dev/zero of=~/test.tmp bs=1M count=256 conv=fsync")
+        child.expect_exact(BASH_PROMPT)
+        child.sendline("# Disk test - Read")
+        child.expect_exact(BASH_PROMPT)
+        child.sendline("sync && dd if=~/test.tmp of=/dev/null bs=1M && rm -f ~/test.tmp")
         child.expect_exact(BASH_PROMPT)
 
         # We are done, let's exit
