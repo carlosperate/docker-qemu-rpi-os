@@ -71,5 +71,5 @@ Dependencies:
 To run the script:
 
 ```
-python launch_vm.py path_to_my.img
+python launch_vm.py -i path_to_my.img -p=pi1
 ```

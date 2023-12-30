@@ -10,20 +10,22 @@ apply fixes and improvements, since the original upstream project hasn't been
 updated in two and a half years.
 
 List of changes:
+- [GitHub view of full diff](https://github.com/carlosperate/docker-qemu-rpi-os/compare/f0f1c1dd6c2470012a6588fae08e528198203710...main#diff-11dbc6371a321f05fc4ae47aa94884866787bc1427d9b5e4a9590b4cdf7f964c)
+  (only files within the `vm` folder are from `dockerpi`)
 - Removed the `dockerpi` image and only kept the `vm`
     - As only the `vm` image is used by the docker-qemu-rpi-os project in the main [../Dockerfile](../Dockerfile)
-    - commit b91b284ff848a7c265230ba5630bd7578074eec2
+    - commit [b91b284](https://github.com/carlosperate/docker-qemu-rpi-os/commit/b91b284ff848a7c265230ba5630bd7578074eec2)
 - Fix build issue `xz: Cannot exec: No such file or directory`
     - Fix from upstream PR: https://github.com/lukechilds/dockerpi/pull/59
-    - commit 46deb95ca5df09be1aec482e45f304025cba802e
+    - commit [46deb95](https://github.com/carlosperate/docker-qemu-rpi-os/commit/46deb95ca5df09be1aec482e45f304025cba802e)
 - Fix build issue `Package python is not available, but is referred to by another package.`
     - Fix from upstream PR: https://github.com/lukechilds/dockerpi/pull/61
-    - commit 0cca83af5c67a90b2ba646098496105e890346fe
+    - commit [0cca83a](https://github.com/carlosperate/docker-qemu-rpi-os/commit/0cca83af5c67a90b2ba646098496105e890346fe)
 - Fix run issue uncompressing OS image zip files larger than 4GB `unzip: bad length`
     - Fix from upstream PR: https://github.com/lukechilds/dockerpi/pull/48
-    - commit 1d6745db79c300ce6445d049760a2e01f4ee43d0
+    - commit [1d6745d](https://github.com/carlosperate/docker-qemu-rpi-os/commit/1d6745db79c300ce6445d049760a2e01f4ee43d0)
 - Updated Qemu to 8.2.0
-    - commit xxxxx
+    - commit [9837075](https://github.com/carlosperate/docker-qemu-rpi-os/commit/983707533f070b372d10d499ada7cad838fe0e16)
     - Fixes issue where Qemu for pi2/3 hangs on power down (before the container had to be manually killed)
     - Extra configure flags:
         - `--disable-gio`: https://gitlab.com/qemu-project/qemu/-/issues/1190
@@ -35,7 +37,7 @@ List of changes:
           https://bugs.launchpad.net/ubuntu/+source/libslirp/+bug/2029431
           https://www.mail-archive.com/qemu-devel@nongnu.org/msg903610.html
     - `entrypoint.sh`: Output of `qemu-img info` now returns multiple `virtual-size` keys and only one needed
-- Added developer documentation for this fork to [../dev-docs.md](../dev-docs.md)
+- Added developer documentation for this fork to parent directory [../dev-docs.md](../dev-docs.md)
 
 The rest of the original README can be seen below.
 

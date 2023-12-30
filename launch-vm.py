@@ -6,18 +6,19 @@ and close it.
 
 This can be used as a simple test to time startup and tear down speed
 of different Raspberry Pi emulation configurations.
+
+This script requires a Pi OS image with autologin enabled.
 """
 import os
 import sys
 import uuid
+import argparse
 
 import pexpect
 
 
-DOCKER_IMAGE = "ghcr.io/carlosperate/dockerpi-vm:local2"
-PI_TYPE = "pi1"
-#PI_TYPE = "pi2"
-#PI_TYPE = "pi3"
+DOCKER_IMAGE = "ghcr.io/carlosperate/dockerpi-vm:local"
+PI_VERSION = "pi1"
 
 RPI_OS_USERNAME = "pi"
 RPI_OS_PASSWORD = "raspberry"
@@ -25,8 +26,7 @@ RPI_OS_PASSWORD = "raspberry"
 BASH_PROMPT = "{}@raspberrypi:~$ ".format(RPI_OS_USERNAME)
 
 
-
-def launch_docker_spawn(img_path):
+def launch_docker_spawn(docker_img, img_path, pi_version):
     """Runs the provided Raspberry Pi OS Lite image in QEMU inside a Docker
     container and returns a child process to run commands inside it.
 
@@ -47,8 +47,8 @@ def launch_docker_spawn(img_path):
         "--name {}".format(docker_container_name),
         # "-p 5022:5022",
         "-v {}:/sdcard/filesystem.img".format(img_path),
-        DOCKER_IMAGE,
-        PI_TYPE
+        docker_img,
+        pi_version,
     ])
     print("Docker cmd: {}".format(docker_cmd))
 
@@ -80,12 +80,12 @@ def close_container(child, docker_container_name):
             print('! Docker container was already stopped.')
 
 
-def run(img_path):
+def run(docker_img, img_path, pi_version):
     print("Staring Raspberry Pi OS container with img: {}".format(img_path))
 
     child, docker_container_name = None, None
     try:
-        child, docker_container_name = launch_docker_spawn(img_path)
+        child, docker_container_name = launch_docker_spawn(docker_img, img_path, pi_version)
         child.expect_exact(BASH_PROMPT)
         child.sendline("uname -a")
         child.expect_exact(BASH_PROMPT)
@@ -110,6 +110,20 @@ def run(img_path):
             close_container(child, docker_container_name)
 
 
+def main():
+    parser = argparse.ArgumentParser(description="Launch and shutdown a Raspberry Pi OS image with Docker and QEMU.")
+    parser.add_argument("os_img", type=str, help="Path to the Raspberry Pi OS Lite image .img file")
+    parser.add_argument("-d", "--docker-img", type=str, default=DOCKER_IMAGE, help="(Optional) Docker image to use")
+    parser.add_argument("-p", "--pi-version", type=str, default=PI_VERSION, help="(Optional) Raspberry Pi version (pi1, pi2, pi3)")
+    args = parser.parse_args()
+
+    if args.pi_version not in ("pi1", "pi2", "pi3"):
+        raise Exception("Invalid Raspberry Pi version provided: {}".format(args.pi_version))
+
+    run(args.docker_img, args.os_img, args.pi_version)
+
+    return 0
+
+
 if __name__ == "__main__":
-    # Hacky way to pass the first two argument as the .img path
-    run(sys.argv[1])
+    exit(main())
