@@ -62,6 +62,39 @@ RUN cmake fatcat-* -DCMAKE_CXX_FLAGS='-static'
 RUN make -j$(nproc)
 
 
+# Building the kernell for virt Qemu machine type
+FROM ubuntu:23.10 AS kernel-builder
+
+ARG KERNEL_VERSION=5.10.205
+ARG KERNEL_URL="https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${KERNEL_VERSION}.tar.xz"
+ARG KERNEL_SIG="https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-${KERNEL_VERSION}.tar.sign"
+
+RUN # Install cross compiler, build tools, and other dependencies
+RUN apt-get update -qq && \
+    apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu gcc-arm-linux-gnueabi binutils-arm-linux-gnueabi && \
+    apt-get install -y build-essential flex bison libssl-dev libelf-dev bc && \
+    apt-get install -y wget xz-utils
+
+RUN # Pull source
+WORKDIR /kernel
+RUN wget "${KERNEL_URL}" && \
+    tar xvJf linux-${KERNEL_VERSION}.tar.xz
+WORKDIR /kernel/linux-${KERNEL_VERSION}
+
+RUN # Build kernel
+RUN export ARCH=arm && \
+    export CROSS_COMPILE=arm-linux-gnueabi- && \
+    export CONFIG_PCI=y  && \
+    export CONFIG_VIRTIO_PCI=y  && \
+    export CONFIG_PCI_HOST_GENERIC=y  && \
+    export CONFIG_DRM=y  && \
+    export CONFIG_DRM_VIRTIO_GPU=y  && \
+    make defconfig && \
+    make kvm_guest.config && \
+    make -j$(nproc)
+RUN mv arch/arm/boot/ ../boot
+
+
 # Build the dockerpi VM image
 FROM busybox:1.36 AS dockerpi-vm
 LABEL maintainer="Luke Childs <lukechilds123@gmail.com>"
@@ -72,6 +105,7 @@ COPY --from=qemu-builder /qemu/build/arm-softmmu/qemu-system-arm /usr/local/bin/
 COPY --from=qemu-builder /qemu/build/aarch64-softmmu/qemu-system-aarch64 /usr/local/bin/qemu-system-aarch64
 COPY --from=qemu-builder /qemu/build/qemu-img /usr/local/bin/qemu-img
 COPY --from=fatcat-builder /fatcat/fatcat /usr/local/bin/fatcat
+COPY --from=kernel-builder /kernel/boot/zImage /root/zImage
 
 ADD $RPI_KERNEL_URL /tmp/qemu-rpi-kernel.zip
 

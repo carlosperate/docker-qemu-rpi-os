@@ -30,12 +30,16 @@ if [ "${target}" = "pi1" ]; then
   kernel="/root/qemu-rpi-kernel/kernel-qemu-4.19.50-buster"
   dtb="/root/qemu-rpi-kernel/versatile-pb.dtb"
   machine=versatilepb
+  cpu=arm1176
+  smp=1
   memory=256m
   root=/dev/sda2
   nic="--net nic --net user,hostfwd=tcp::5022-:22"
 elif [ "${target}" = "pi2" ]; then
   emulator=qemu-system-arm
   machine=raspi2b
+  cpu=cortex-a7
+  smp=4
   memory=1024m
   kernel_pattern=kernel7.img
   dtb_pattern=bcm2709-rpi-2-b.dtb
@@ -44,11 +48,29 @@ elif [ "${target}" = "pi2" ]; then
 elif [ "${target}" = "pi3" ]; then
   emulator=qemu-system-aarch64
   machine=raspi3b
+  cpu=cortex-a53
+  smp=4
   memory=1024m
   kernel_pattern=kernel8.img
   dtb_pattern=bcm2710-rpi-3-b-plus.dtb
   append="dwc_otg.fiq_fsm_enable=0"
   nic="-netdev user,id=net0,hostfwd=tcp::5022-:22 -device usb-net,netdev=net0"
+elif [ "${target}" = "pivirt" ]; then
+  emulator=qemu-system-arm
+  machine=virt
+  cpu=cortex-a7
+  smp="$(nproc)"
+  memory=1024m
+  dtb_pattern=""
+  #dtb="/root/qemu-rpi-kernel/bcm2836-rpi-2-b.dtb"
+  dtb=""
+  kernel_pattern=""
+  kernel="/root/zImage"
+  append=""
+  root=/dev/vda2
+  nic="-netdev user,id=mynet,hostfwd=tcp::5022-:22 -device virtio-net-device,netdev=mynet"
+  img_options=",if=none,id=hd0"
+  drive_extra="-device virtio-blk-device,drive=hd0,bootindex=0"
 else
   echo "Target ${target} not supported"
   echo "Supported targets: pi1 pi2 pi3"
@@ -76,19 +98,28 @@ if [ "${kernel_pattern}" ] && [ "${dtb_pattern}" ]; then
   dtb=$(find "${fat_folder}" -name "${dtb_pattern}")
 fi
 
-if [ "${kernel}" = "" ] || [ "${dtb}" = "" ]; then
-  echo "Missing kernel='${kernel}' or dtb='${dtb}'"
+if [ "${kernel}" = "" ] || ([ "${dtb}" = "" ] && [ "${dtb_pattern}" != "" ]); then
+  echo "Missing kernel='${kernel}' or (dtb='${dtb}' for dtb_pattern='${dtb_pattern}')"
   exit 2
 fi
 
+# Some configurations don't need a dtb file and the flag should be skipped
+if [ -n "$dtb" ]; then
+    dtb_flag="--dtb ${dtb}"
+else
+    dtb_flag=""
+fi
+
 echo "Booting QEMU machine \"${machine}\" with kernel=${kernel} dtb=${dtb}"
+set -x
 exec ${emulator} \
   --machine "${machine}" \
-  --cpu arm1176 \
+  --cpu "${cpu}" \
+  --smp "${smp}" \
   --m "${memory}" \
-  --drive "format=raw,file=${image_path}" \
+  --drive "format=raw,file=${image_path}${img_options}" ${drive_extra} \
   ${nic} \
-  --dtb "${dtb}" \
+  ${dtb_flag} \
   --kernel "${kernel}" \
   --append "rw earlyprintk loglevel=8 console=ttyAMA0,115200 dwc_otg.lpm_enable=0 root=${root} rootwait panic=1 ${append}" \
   --no-reboot \

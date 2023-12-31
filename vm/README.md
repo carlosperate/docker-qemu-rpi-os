@@ -37,6 +37,12 @@ List of changes:
           https://bugs.launchpad.net/ubuntu/+source/libslirp/+bug/2029431
           https://www.mail-archive.com/qemu-devel@nongnu.org/msg903610.html
     - `entrypoint.sh`: Output of `qemu-img info` now returns multiple `virtual-size` keys and only one needed
+- Create an additional board type for performance reasons
+    - https://github.com/carlosperate/docker-qemu-rpi-os/issues/3
+    - Uses the `virt` machine type: https://www.qemu.org/docs/master/system/arm/virt.html
+    - This is not an accurate Pi emulation, but has better performance and 1 GB of RAM
+    - Docker image has to build the kernel, as the pi kernel does not include the required configuration
+    - commit [xxxxx](https://github.com/carlosperate/docker-qemu-rpi-os/commit/xxxx)
 - Added developer documentation for this fork to parent directory [../dev-docs.md](../dev-docs.md)
 
 The rest of the original README can be seen below.
