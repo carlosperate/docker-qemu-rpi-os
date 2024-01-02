@@ -22,7 +22,17 @@ docker run -it carlosperate/qemu-rpi-os-lite
 
 ### Publish docker image
 
-TBD.
+GitHub needs authentication with a personal token:
+
+```bash
+echo $CR_PAT | docker login ghcr.io -u <your_username> --password-stdin
+```
+```bash
+docker tag IMAGE_ID carlosperate/qemu-rpi-os-lite:VERSION
+```
+```bash
+docker push ghcr.io/carlosperate/qemu-rpi-os-lite:VERSION
+```
 
 
 ## `dockerpi` Fork
@@ -34,7 +44,10 @@ as listed in its [vm/README.md](vm/README.md) file.
 ### Build image
 
 ```bash
-docker build -t ghcr.io/carlosperate/dockerpi-vm:local .
+cd vm
+```
+```bash
+docker build -t ghcr.io/carlosperate/qemu-rpi-vm:local .
 ```
 
 ### Run container pointing to Pi OS image file
@@ -45,14 +58,16 @@ docker run -it --rm -v full_path_to.img:/sdcard/filesystem.img -p 5022:5022 ghcr
 
 ### Push image to GH Container Registry
 
+GitHub needs authentication with a personal token:
+
 ```bash
-docker login ghcr.io -u <your_username>
+echo $CR_PAT | docker login ghcr.io -u <your_username> --password-stdin
 ```
 ```bash
-docker tag IMAGE_ID ghcr.io/carlosperate/dockerpi-vm:VERSION
+docker tag IMAGE_ID ghcr.io/carlosperate/qemu-rpi-vm:VERSION
 ```
 ```bash
-docker push ghcr.io/carlosperate/dockerpi-vm:VERSION
+docker push ghcr.io/carlosperate/qemu-rpi-vm:VERSION
 ```
 
 ### `benchmark_vm.py` script

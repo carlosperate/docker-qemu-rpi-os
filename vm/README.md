@@ -42,8 +42,21 @@ List of changes:
     - Uses the `virt` machine type: https://www.qemu.org/docs/master/system/arm/virt.html
     - This is not an accurate Pi emulation, but has better performance and 1 GB of RAM
     - Docker image has to build the kernel, as the pi kernel does not include the required configuration
-    - commit [xxxxx](https://github.com/carlosperate/docker-qemu-rpi-os/commit/xxxx)
+    - commit [49c922b](https://github.com/carlosperate/docker-qemu-rpi-os/commit/49c922b8b9e30984767105cd8b9be960732ae095)
 - Added developer documentation for this fork to parent directory [../dev-docs.md](../dev-docs.md)
+
+Useful links:
+- [qemu-rpi-kernel](https://github.com/dhruvvyas90/qemu-rpi-kernel)
+- [Emulating a Raspberry Pi in QEMU](https://interrupt.memfault.com/blog/emulating-raspberry-pi-in-qemu)
+- [Emulating Raspberry Pi 4 with Qemu](https://gist.github.com/cGandom/23764ad5517c8ec1d7cd904b923ad863)
+- [Arm QEMU Debian 11 VM on x86/64 (amd64) Linux](https://www.willhaley.com/blog/debian-arm-qemu/)
+- [Raspberry Pi 4 emulation with QEMU virt](https://blog.grandtrunk.net/2023/03/raspberry-pi-4-emulation-with-qemu/)
+- [Raspberry Pi: How to cross-compile and use Mainline Kernel](https://gist.github.com/lategoodbye/c7317a42bf7f9c07f5a91baed8c68f75)
+- [Raspbian on QEMU with ARMv7](https://github.com/paulden/raspbian-on-qemu-armv7)
+- [QEMU for Beginner and Advanced](https://hackmd.io/@MarconiJiang/qemu_beginner)
+- [Installing Debian on QEMU’s 32-bit ARM “virt” board](https://translatedcode.wordpress.com/2016/11/03/installing-debian-on-qemus-32-bit-arm-virt-board/)
+- [Installing Debian on QEMU’s 64-bit ARM “virt” board](https://translatedcode.wordpress.com/2017/07/24/installing-debian-on-qemus-64-bit-arm-virt-board/)
+
 
 The rest of the original README can be seen below.
 

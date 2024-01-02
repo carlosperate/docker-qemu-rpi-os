@@ -60,7 +60,7 @@ docker run -it -p 5022:5022 ghcr.io/carlosperate/qemu-rpi-os-lite:bullseye-lates
 
 ## Available Images
 
-There are two main releases right now `buster-legacy-latest` and
+There are two main releases right now `buster-latest` and
 `bullseye-latest`:
 
 ```
@@ -68,7 +68,7 @@ ghcr.io/carlosperate/qemu-rpi-os-lite:bullseye-latest
 ```
 
 ```
-ghcr.io/carlosperate/qemu-rpi-os-lite:buster-legacy-latest
+ghcr.io/carlosperate/qemu-rpi-os-lite:buster-latest
 ```
 
 Each Pi OS release has its own tag, including the OS release date in this
@@ -109,12 +109,6 @@ docker run -it ghcr.io/carlosperate/qemu-rpi-os-lite:jessie-latest
 docker run -it ghcr.io/carlosperate/qemu-rpi-os-lite:stretch-latest
 ```
 
-Tags for the older "buster" release, before it was renamed to "buster-legacy":
-
-```bash
-docker run -it ghcr.io/carlosperate/qemu-rpi-os-lite:buster-latest
-```
-
 ## Build and run this docker image from the repository
 
-This information can be found in the [dev_docs.md](dev_docs.md) file.
+This information can be found in the [dev-docs.md](dev-docs.md) file.
