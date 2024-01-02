@@ -134,7 +134,7 @@ def main():
     parser.add_argument("-p", "--pi-version", type=str, default=PI_VERSION, help="(Optional) Raspberry Pi version (pi1, pi2, pi3)")
     args = parser.parse_args()
 
-    if args.pi_version not in ("pi1", "pi2", "pi3"):
+    if args.pi_version not in ("pi1", "pi2", "pi3", "pivirt"):
         raise Exception("Invalid Raspberry Pi version provided: {}".format(args.pi_version))
 
     run(args.docker_img, args.os_img, args.pi_version)
