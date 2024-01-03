@@ -2,7 +2,7 @@
 
 GIB_IN_BYTES="1073741824"
 
-target="${1:-pi1}"
+target="${1:-pivirt}"
 image_path="/sdcard/filesystem.img"
 zip_path="/filesystem.zip"
 
