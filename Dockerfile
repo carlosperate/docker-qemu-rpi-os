@@ -1,12 +1,6 @@
-# This Dockerfile is based on the last image from dockerpi
-# It's just the VM image with a different compressed Raspbian fs img file
-# https://github.com/lukechilds/dockerpi/blob/6c1ac8edab988dca8bb36dddc5388e8c4123c824/Dockerfile
-
-# The current lukechilds/dockerpi:vm has an issue uncompressing fs images
-# larger than 1 GB, so it has been temporarily forked with the fix
-# More info: https://github.com/lukechilds/dockerpi/pull/48
-# FROM lukechilds/dockerpi:vm
-FROM ghcr.io/carlosperate/dockerpi:vm-fix
+# Using a fork of the https://github.com/lukechilds/dockerpi vm with multiple
+# improvements and fixes.
+FROM ghcr.io/carlosperate/qemu-rpi-vm:2024-01-03
 
 LABEL org.opencontainers.image.authors="Carlos Pereira Atencio <carlosperate@embeddedlog.com>"
 LABEL org.opencontainers.image.description="Docker image with Raspberry Pi OS running on QEMU."
